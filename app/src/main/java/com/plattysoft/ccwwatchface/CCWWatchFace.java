@@ -213,6 +213,7 @@ public class CCWWatchFace extends CanvasWatchFaceService {
             float angleInRadians = 0;
             Paint paint;
             float length;
+            float margin = getResources().getDimension(R.dimen.watch_margin);
             float textPadding = ((mNumbersPaint.descent() + mNumbersPaint.ascent()) / 2);
             for (int i=0; i<60; i++) {
                 if (i%15 == 0) {
@@ -220,8 +221,8 @@ public class CCWWatchFace extends CanvasWatchFaceService {
                     String text = (i>0) ? String.valueOf(i/5) : "12";
 
                     // Draw text
-                    float textX = (float) (centerX - (width/2 - textOffset) * Math.sin(angleInRadians));
-                    float textY = (float) (centerY - (height/2 - textOffset) * Math.cos(angleInRadians) - textPadding);
+                    float textX = (float) (centerX - (width/2 - textOffset - margin) * Math.sin(angleInRadians));
+                    float textY = (float) (centerY - (height/2 - textOffset - margin) * Math.cos(angleInRadians) - textPadding);
                     canvas.drawText(text, textX, textY, mNumbersPaint);
 
                     // Shorter line
@@ -238,10 +239,10 @@ public class CCWWatchFace extends CanvasWatchFaceService {
                 }
 
                 canvas.drawLine(
-                        (float) (centerX - width/2 * Math.sin(angleInRadians)),
-                        (float) (centerY - height/2 * Math.cos(angleInRadians)),
-                        (float) (centerX - (width/2 - length) * Math.sin(angleInRadians)),
-                        (float) (centerY - (height/2 - length) * Math.cos(angleInRadians)),
+                        (float) (centerX - (width/2 - margin) * Math.sin(angleInRadians)),
+                        (float) (centerY - (height/2 - margin) * Math.cos(angleInRadians)),
+                        (float) (centerX - (width/2 - length - margin) * Math.sin(angleInRadians)),
+                        (float) (centerY - (height/2 - length - margin) * Math.cos(angleInRadians)),
                         paint);
 
                 angleInRadians += Math.PI/30;
