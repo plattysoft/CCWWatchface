@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="analog_background">#000000</color>
+    <color name="lines">#ffffff</color>
+    <color name="numbers">#ffffff</color>
+    <color name="analog_hands">#eeeeee</color>
+    <color name="analog_hands_seconds">#ff2222</color>
+</resources>
