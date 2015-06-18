@@ -4,5 +4,6 @@
     <color name="lines">#ffffff</color>
     <color name="numbers">#ffffff</color>
     <color name="analog_hands">#eeeeee</color>
+    <color name="analog_hands_stroke">#aaaaaa</color>
     <color name="analog_hands_seconds">#ff2222</color>
 </resources>

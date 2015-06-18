@@ -227,6 +227,7 @@ public class CCWWatchFace extends CanvasWatchFaceService {
             Paint paint;
             float length;
             float margin = getResources().getDimension(R.dimen.watch_margin);
+            boolean draw;
             float textPadding = ((mNumbersPaint.descent() + mNumbersPaint.ascent()) / 2);
             for (int i=0; i<60; i++) {
                 if (i%15 == 0) {
@@ -241,23 +242,27 @@ public class CCWWatchFace extends CanvasWatchFaceService {
                     // Shorter line
                     length = getResources().getDimension(R.dimen.lines_thick_size_for_number);
                     paint = mThickLinesPaint;
+                    draw = true;
                 }
                 else if (i%5 == 0) {
                     length = getResources().getDimension(R.dimen.lines_thick_size);
                     paint = mThickLinesPaint;
+                    draw = true;
                 }
                 else {
                     length = getResources().getDimension(R.dimen.lines_size);
                     paint = mLinesPaint;
+                    draw = !mAmbient;
                 }
 
-                canvas.drawLine(
-                        (float) (centerX - (width/2 - margin) * Math.sin(angleInRadians)),
-                        (float) (centerY - (height/2 - margin) * Math.cos(angleInRadians)),
-                        (float) (centerX - (width/2 - length - margin) * Math.sin(angleInRadians)),
-                        (float) (centerY - (height/2 - length - margin) * Math.cos(angleInRadians)),
-                        paint);
-
+                if (draw) {
+                    canvas.drawLine(
+                            (float) (centerX - (width / 2 - margin) * Math.sin(angleInRadians)),
+                            (float) (centerY - (height / 2 - margin) * Math.cos(angleInRadians)),
+                            (float) (centerX - (width / 2 - length - margin) * Math.sin(angleInRadians)),
+                            (float) (centerY - (height / 2 - length - margin) * Math.cos(angleInRadians)),
+                            paint);
+                }
                 angleInRadians += Math.PI/30;
             }
         }
@@ -306,33 +311,33 @@ public class CCWWatchFace extends CanvasWatchFaceService {
             drawOutline(canvas, centerX, centerY, hrRot, hrX, hrY, hrOffsetX, hrOffsetY);
         }
 
-        private void drawOutline(Canvas canvas, float centerX, float centerY, float minRot, float minX, float minY, float minOffsetX, float minOffsetY) {
-            float minPaddingX = (float) -Math.cos(minRot) * mHandPaint.getStrokeWidth()/2;
-            float minPaddingY = (float) Math.sin(minRot) * mHandPaint.getStrokeWidth()/2;
+        private void drawOutline(Canvas canvas, float centerX, float centerY, float angle, float lengthX, float lengthY, float offsetX, float offsetY) {
+            float minPaddingX = (float) -Math.cos(angle) * mHandPaint.getStrokeWidth()/2;
+            float minPaddingY = (float) Math.sin(angle) * mHandPaint.getStrokeWidth()/2;
 
-            float angleInDegrees = (float) (minRot*180f/Math.PI);
+            float angleInDegrees = (float) (angle*180f/Math.PI);
 
-            canvas.drawLine(centerX - minOffsetX + minPaddingX, centerY - minOffsetY - minPaddingY,
-                    centerX + minX + minPaddingX, centerY + minY - minPaddingY,
+            canvas.drawLine(centerX - offsetX + minPaddingX, centerY - offsetY - minPaddingY,
+                    centerX + lengthX + minPaddingX, centerY + lengthY - minPaddingY,
                     mHandStrokePaint);
-            canvas.drawLine(centerX + minX - minPaddingX, centerY + minY + minPaddingY,
-                    centerX - minOffsetX - minPaddingX, centerY - minOffsetY + minPaddingY,
+            canvas.drawLine(centerX + lengthX - minPaddingX, centerY + lengthY + minPaddingY,
+                    centerX - offsetX - minPaddingX, centerY - offsetY + minPaddingY,
                     mHandStrokePaint);
 
-            mTmpRect.set(centerX + minX - mHandPaint.getStrokeWidth()/2,
-                    centerY + minY - mHandPaint.getStrokeWidth()/2,
-                    centerX + minX + mHandPaint.getStrokeWidth()/2,
-                    centerY + minY + mHandPaint.getStrokeWidth()/2);
+            mTmpRect.set(centerX + lengthX - mHandPaint.getStrokeWidth()/2,
+                    centerY + lengthY - mHandPaint.getStrokeWidth()/2,
+                    centerX + lengthX + mHandPaint.getStrokeWidth()/2,
+                    centerY + lengthY + mHandPaint.getStrokeWidth()/2);
             canvas.drawArc(mTmpRect,
                     angleInDegrees - 180,
                     180,
                     false,
                     mHandStrokePaint);
 
-            mTmpRect.set(centerX - minOffsetX - mHandPaint.getStrokeWidth()/2,
-                    centerY - minOffsetY - mHandPaint.getStrokeWidth()/2,
-                    centerX - minOffsetX + mHandPaint.getStrokeWidth()/2,
-                    centerY - minOffsetY + mHandPaint.getStrokeWidth()/2);
+            mTmpRect.set(centerX - offsetX - mHandPaint.getStrokeWidth()/2,
+                    centerY - offsetY - mHandPaint.getStrokeWidth()/2,
+                    centerX - offsetX + mHandPaint.getStrokeWidth()/2,
+                    centerY - offsetY + mHandPaint.getStrokeWidth()/2);
             canvas.drawArc(mTmpRect,
                     angleInDegrees,
                     180,

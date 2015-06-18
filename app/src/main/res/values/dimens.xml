@@ -3,7 +3,8 @@
     <dimen name="watch_margin">4dp</dimen>
 
     <dimen name="analog_hand_seconds_stroke">4dp</dimen>
-    <dimen name="analog_hand_stroke">8dp</dimen>
+    <dimen name="analog_hand_width">8dp</dimen>
+    <dimen name="analog_hand_stroke">2dp</dimen>
 
     <dimen name="lines_stroke">1dp</dimen>
     <dimen name="lines_thick_stroke">4dp</dimen>
