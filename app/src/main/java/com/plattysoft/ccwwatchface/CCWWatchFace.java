@@ -32,6 +32,7 @@ import android.os.Message;
 import android.support.wearable.watchface.CanvasWatchFaceService;
 import android.support.wearable.watchface.WatchFaceStyle;
 import android.text.format.Time;
+import android.view.Gravity;
 import android.view.SurfaceHolder;
 
 import java.util.TimeZone;
@@ -112,6 +113,8 @@ public class CCWWatchFace extends CanvasWatchFaceService {
             setWatchFaceStyle(new WatchFaceStyle.Builder(CCWWatchFace.this)
                     .setCardPeekMode(WatchFaceStyle.PEEK_MODE_SHORT)
                     .setBackgroundVisibility(WatchFaceStyle.BACKGROUND_VISIBILITY_INTERRUPTIVE)
+                    .setHotwordIndicatorGravity(Gravity.CENTER)
+                    .setStatusBarGravity(Gravity.CENTER)
                     .setShowSystemUiTime(false)
                     .build());
 
