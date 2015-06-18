@@ -297,20 +297,17 @@ public class CCWWatchFace extends CanvasWatchFaceService {
             float minOffsetX = (float) Math.sin(minRot) * extraLength;
             float minOffsetY = (float) -Math.cos(minRot) * extraLength;
 
-            if (!mAmbient) {
-                canvas.drawLine(centerX - minOffsetX, centerY - minOffsetY, centerX + minX, centerY + minY, mHandPaint);
-            }
+            canvas.drawLine(centerX - minOffsetX, centerY - minOffsetY, centerX + minX, centerY + minY,
+                 mAmbient ? mBackgroundPaint : mHandPaint);
             drawOutline(canvas, centerX, centerY, minRot, minX, minY, minOffsetX, minOffsetY);
-
 
             float hrX = (float) Math.sin(hrRot) * hrLength;
             float hrY = (float) -Math.cos(hrRot) * hrLength;
             float hrOffsetX = (float) Math.sin(hrRot) * extraLength;
             float hrOffsetY = (float) -Math.cos(hrRot) * extraLength;
 
-            if (!mAmbient) {
-                canvas.drawLine(centerX - hrOffsetX, centerY - hrOffsetY, centerX + hrX, centerY + hrY, mHandPaint);
-            }
+            canvas.drawLine(centerX - hrOffsetX, centerY - hrOffsetY, centerX + hrX, centerY + hrY,
+                mAmbient ? mBackgroundPaint : mHandPaint);
             drawOutline(canvas, centerX, centerY, hrRot, hrX, hrY, hrOffsetX, hrOffsetY);
         }
 
