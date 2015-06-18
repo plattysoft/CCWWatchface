@@ -5,3 +5,6 @@
 .DS_Store
 /build
 /captures
+keys
+play_images
+*.apk
