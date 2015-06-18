@@ -23,7 +23,9 @@ import android.content.IntentFilter;
 import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.Path;
 import android.graphics.Rect;
+import android.graphics.RectF;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -58,8 +60,13 @@ public class CCWWatchFace extends CanvasWatchFaceService {
         Paint mLinesPaint;
         Paint mThickLinesPaint;
         Paint mHandPaint;
+        Paint mHandStrokePaint;
         Paint mSecondsPaint;
         Paint mNumbersPaint;
+
+        Path mMinPath = new Path();
+        RectF mTmpRect = new RectF();
+
         boolean mAmbient;
         Time mTime;
 
@@ -148,9 +155,15 @@ public class CCWWatchFace extends CanvasWatchFaceService {
 
             mHandPaint = new Paint();
             mHandPaint.setColor(resources.getColor(R.color.analog_hands));
-            mHandPaint.setStrokeWidth(resources.getDimension(R.dimen.analog_hand_stroke));
+            mHandPaint.setStrokeWidth(resources.getDimension(R.dimen.analog_hand_width));
             mHandPaint.setAntiAlias(true);
             mHandPaint.setStrokeCap(Paint.Cap.ROUND);
+
+            mHandStrokePaint = new Paint();
+            mHandStrokePaint.setColor(resources.getColor(R.color.analog_hands_stroke));
+            mHandStrokePaint.setStrokeWidth(resources.getDimension(R.dimen.analog_hand_stroke));
+            mHandStrokePaint.setAntiAlias(true);
+            mHandStrokePaint.setStyle(Paint.Style.STROKE);
         }
 
         @Override
@@ -275,13 +288,57 @@ public class CCWWatchFace extends CanvasWatchFaceService {
             float minY = (float) -Math.cos(minRot) * minLength;
             float minOffsetX = (float) Math.sin(minRot) * extraLength;
             float minOffsetY = (float) -Math.cos(minRot) * extraLength;
-            canvas.drawLine(centerX - minOffsetX, centerY - minOffsetY, centerX + minX, centerY + minY, mHandPaint);
+
+            if (!mAmbient) {
+                canvas.drawLine(centerX - minOffsetX, centerY - minOffsetY, centerX + minX, centerY + minY, mHandPaint);
+            }
+            drawOutline(canvas, centerX, centerY, minRot, minX, minY, minOffsetX, minOffsetY);
+
 
             float hrX = (float) Math.sin(hrRot) * hrLength;
             float hrY = (float) -Math.cos(hrRot) * hrLength;
             float hrOffsetX = (float) Math.sin(hrRot) * extraLength;
             float hrOffsetY = (float) -Math.cos(hrRot) * extraLength;
-            canvas.drawLine(centerX - hrOffsetX, centerY - hrOffsetY, centerX + hrX, centerY + hrY, mHandPaint);
+
+            if (!mAmbient) {
+                canvas.drawLine(centerX - hrOffsetX, centerY - hrOffsetY, centerX + hrX, centerY + hrY, mHandPaint);
+            }
+            drawOutline(canvas, centerX, centerY, hrRot, hrX, hrY, hrOffsetX, hrOffsetY);
+        }
+
+        private void drawOutline(Canvas canvas, float centerX, float centerY, float minRot, float minX, float minY, float minOffsetX, float minOffsetY) {
+            float minPaddingX = (float) -Math.cos(minRot) * mHandPaint.getStrokeWidth()/2;
+            float minPaddingY = (float) Math.sin(minRot) * mHandPaint.getStrokeWidth()/2;
+
+            float angleInDegrees = (float) (minRot*180f/Math.PI);
+
+            canvas.drawLine(centerX - minOffsetX + minPaddingX, centerY - minOffsetY - minPaddingY,
+                    centerX + minX + minPaddingX, centerY + minY - minPaddingY,
+                    mHandStrokePaint);
+            canvas.drawLine(centerX + minX - minPaddingX, centerY + minY + minPaddingY,
+                    centerX - minOffsetX - minPaddingX, centerY - minOffsetY + minPaddingY,
+                    mHandStrokePaint);
+
+            mTmpRect.set(centerX + minX - mHandPaint.getStrokeWidth()/2,
+                    centerY + minY - mHandPaint.getStrokeWidth()/2,
+                    centerX + minX + mHandPaint.getStrokeWidth()/2,
+                    centerY + minY + mHandPaint.getStrokeWidth()/2);
+            canvas.drawArc(mTmpRect,
+                    angleInDegrees - 180,
+                    180,
+                    false,
+                    mHandStrokePaint);
+
+            mTmpRect.set(centerX - minOffsetX - mHandPaint.getStrokeWidth()/2,
+                    centerY - minOffsetY - mHandPaint.getStrokeWidth()/2,
+                    centerX - minOffsetX + mHandPaint.getStrokeWidth()/2,
+                    centerY - minOffsetY + mHandPaint.getStrokeWidth()/2);
+            canvas.drawArc(mTmpRect,
+                    angleInDegrees,
+                    180,
+                    false,
+                    mHandStrokePaint);
+
         }
 
         @Override
