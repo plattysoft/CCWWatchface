@@ -8,7 +8,7 @@ android {
         applicationId "com.plattysoft.ccwwatchface"
         minSdkVersion 14
         targetSdkVersion 22
-        versionCode 3
+        versionCode 4
         versionName "1.0"
     }
 
@@ -16,7 +16,7 @@ android {
         release {
             Properties properties = new Properties()
             properties.load(project.rootProject.file('local.properties').newDataInputStream())
-            
+
             storeFile file(properties.getProperty("storeFile"))
             storePassword properties.getProperty("storePassword")
             keyAlias properties.getProperty("keyAlias")
